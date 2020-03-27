@@ -43,8 +43,6 @@ describe('Studio routes', () => {
         expect(res.body).toEqual([
           { _id: expect.any(String), name: expect.any(String) }, 
           { _id: expect.any(String), name: expect.any(String) }, 
-          { _id: expect.any(String), name: expect.any(String) }, 
-          { _id: expect.any(String), name: expect.any(String) }, 
           { _id: expect.any(String), name: expect.any(String) }
         ]);
       }); 
