@@ -1,22 +1,13 @@
 require('dotenv').config();
 
+const { getStudio } = require('../db/data-helpers');
+
 const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 
 describe('Studio routes', () => {
-  beforeAll(() => {
-    connect();
-  });
-
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-
-  afterAll(() => {
-    return mongoose.connection.close();
-  });
 
   // POST
   it('creates a Studio', () => { 
@@ -42,6 +33,36 @@ describe('Studio routes', () => {
           __v: 0
         });
       });   
+  });
+
+  // GET ALL
+  it('gets all Studios', () => {
+    return request(app)
+      .get('/studios')
+      .then(res => {
+        expect(res.body).toEqual([
+          { _id: expect.any(String), name: expect.any(String) }, 
+          { _id: expect.any(String), name: expect.any(String) }, 
+          { _id: expect.any(String), name: expect.any(String) }, 
+          { _id: expect.any(String), name: expect.any(String) }, 
+          { _id: expect.any(String), name: expect.any(String) }
+        ]);
+      }); 
+  });
+
+  // GET ONE
+  it('gets a specific Studios', async() => {
+    const studio = await getStudio();
+    
+    return request(app)
+      .get(`/studios/${studio._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: studio._id,
+          name: studio.name,
+          address: studio.address
+        }); 
+      });
   });
 
 });
