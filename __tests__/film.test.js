@@ -16,7 +16,7 @@ describe('Film routes', () => {
     return request(app)
       .post('/films')
       .send({ 
-        title: 'Pi',
+        title: 'Pi', 
         studio: studio._id,
         released: 2000,
         cast: [{
@@ -40,7 +40,7 @@ describe('Film routes', () => {
       });   
   });
 
-  // GET ALL
+  // // GET ALL
   it('gets all Films', () => {
     return request(app)
       .get('/films')
@@ -53,38 +53,31 @@ describe('Film routes', () => {
   });
 
   // GET ONE
-  // Still getting actors to display fully, sorry
-  // it('gets a specific Film', async() => {
-  //   const film = await getFilm();
-  //   const studio = await getStudio({ _id: { $in: film.studio } });
+  it('gets a specific Film', async() => {
+    const film = await getFilm();
+    const studio = await getStudio({ _id: { $in: film.studio } });
     
-  //   const actor = await getActor({ _id: { $in: film.cast[0].actor } });
-  //   const actors = film.cast.map(cast => cast.actor);
-  //   console.log('actors is', actors);
-  //   console.log('actor is', actor);
-
-  //   console.log('film is', film);
-
-  //   return request(app)
-  //     .get(`/films/${film._id}`)
-  //     .then(res => {
-  //       expect(res.body).toEqual({          
-  //         title: film.title,
-  //         released: film.released,
-  //         studio: { 
-  //           _id: studio._id.toString(),
-  //           name: studio.name
-  //         },
-  //         cast: [{
-  //           id: expect.any(String),
-  //           role: expect.any(String),
-  //           actor: {
-  //             _id: actor._id.toString(),
-  //             name: expect.any(String)
-  //           }
-  //         }]
-  //       }); 
-  //     });
-  // });
+    return request(app)
+      .get(`/films/${film._id}`)
+      .then(res => {
+        expect(res.body).toEqual({          
+          title: film.title,
+          released: film.released,
+          studio: { 
+            _id: studio._id.toString(),
+            name: studio.name
+          },
+          // Is this an OK test (just for shape) since we're not sure of the actual cast? 
+          cast: expect.arrayContaining([{
+            _id: expect.any(String),
+            role: expect.any(String),
+            actor: {
+              _id: expect.any(String),
+              name: expect.any(String)
+            }
+          }])         
+        }); 
+      });
+  });
 
 });
