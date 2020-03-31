@@ -10,13 +10,18 @@
     "start:watch": "nodemon server.js"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__not-tests__/"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^25.1.4",
+    "chance": "^1.1.4",
     "eslint": "^6.8.0",
     "jest": "^25.2.3",
     "nodemon": "^2.0.2",
