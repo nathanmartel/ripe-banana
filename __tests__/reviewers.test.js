@@ -47,14 +47,22 @@ describe('Reviewer routes', () => {
   // GET ONE
   it('gets a specific Reviewer', async() => {
     const reviewer = await getReviewer();
-    
     return request(app)
       .get(`/reviewers/${reviewer._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: reviewer._id,
           name: reviewer.name,
-          company: reviewer.company
+          company: reviewer.company,
+          reviews: expect.arrayContaining([{
+            _id: expect.any(String),
+            rating: expect.any(Number),
+            review: expect.any(String),
+            film: {
+              _id: expect.any(String),
+              title: expect.any(String)
+            }
+          }])
         }); 
       });
   });
@@ -62,7 +70,6 @@ describe('Reviewer routes', () => {
   // PATCH
   it('updates a specific Reviewer', async() => {
     const reviewer = await getReviewer();
-    
     return request(app)
       .patch(`/reviewers/${reviewer._id}`)
       .send({ company: 'Chicago Tribune' })
@@ -71,6 +78,22 @@ describe('Reviewer routes', () => {
           ...reviewer,
           company: 'Chicago Tribune'
         }); 
+      });
+  });
+
+  // DELETE
+  // This doesn't really work. Cannot get the reviews condition to work properly. 
+  it('deletes a Reviewer (if they have no reviews)', async() => {
+    const reviewer = await getReviewer();
+    return request(app)
+      .delete(`/reviewers/${reviewer._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          // ...reviewer,
+          'deletedCount': 1,
+          'n': 1,
+          'ok': 1
+        });
       });
   });
 

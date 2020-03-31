@@ -51,11 +51,16 @@ describe('Actor routes', () => {
     return request(app)
       .get(`/actors/${actor._id}`)
       .then(res => {
-        expect(res.body).toEqual({
+        expect(res.body).toEqual([{
           name: actor.name,
           dob: actor.dob,
-          pob: actor.pob
-        }); 
+          pob: actor.pob,
+          films: expect.arrayContaining([{
+            _id: expect.any(String),
+            title: expect.any(String),
+            released: expect.any(Number)
+          }])
+        }]); 
       });
   });
 

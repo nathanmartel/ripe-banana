@@ -7,7 +7,7 @@ const Film = require('../lib/models/Film');
 const Review = require('../lib/models/Review');
 const chance = require('chance').Chance();
 
-module.exports = async({ studiosToCreate = 3, actorsToCreate = 5, reviewersToCreate = 7, filmsToCreate = 9, reviewsToCreate = 150 } = {}) => {
+module.exports = async({ studiosToCreate = 3, actorsToCreate = 5, reviewersToCreate = 7, filmsToCreate = 9, reviewsToCreate = 120 } = {}) => {
   const studios = await Studio.create([...Array(studiosToCreate)].map(() => ({
     name: chance.company(),
     address: {
@@ -41,7 +41,7 @@ module.exports = async({ studiosToCreate = 3, actorsToCreate = 5, reviewersToCre
   await Review.create([...Array(reviewsToCreate)].map(() => ({
     rating: chance.integer({ min: 1, max: 5 }),
     reviewer: chance.pickone(reviewers)._id,
-    review: chance.sentence(),
+    review: chance.sentence({ words: 15 }),
     film: chance.pickone(films)._id
   })));
 };

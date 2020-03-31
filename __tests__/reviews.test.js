@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { getReviewer, getFilm } = require('../db/data-helpers');
+const { getReviewer, getFilm, getReview } = require('../db/data-helpers');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -34,7 +34,7 @@ describe('Reviews routes', () => {
   });
 
   // GET ALL
-  it('gets all Reviews', async() => {
+  it('gets all Reviews', () => {
     return request(app)
       .get('/reviews')
       .then(res => {
@@ -49,7 +49,7 @@ describe('Reviews routes', () => {
   });
 
   // GET ALL - Alternate version via static method 
-  it('gets all Reviews (alternate version)', async() => {
+  it('gets all Reviews (alternate version)', () => {
     return request(app)
       .get('/reviews/top100')
       .then(res => {
@@ -60,6 +60,16 @@ describe('Reviews routes', () => {
           review: expect.any(String),
           film: { _id: expect.any(String), title: expect.any(String) } 
         }); 
+      }); 
+  });
+
+  // DELETE
+  it('deletes a Review', async() => {
+    const review = await getReview();
+    return request(app)
+      .delete(`/reviews/${review._id}`)
+      .then(res => {
+        expect(res.body).toEqual(review);
       }); 
   });
 
